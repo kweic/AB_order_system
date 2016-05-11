@@ -1,12 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package airbrushordersystem;
 
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -22,59 +15,79 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-/**
- *
- * @author kw
- */
 public class UI_Items {
 
-    private ArrayList<String> defaultItems;
-    private String itemsListPath;
-    private ArrayList<String> validImageFormats;
+    final private ArrayList<String> defaultItems;
+    final private String itemsListPath;
+    final private ArrayList<String> validImageFormats;
+    private ArrayList<ABItemObject> currentItems;
 
     public UI_Items() {
         defaultItems = new ArrayList(Arrays.asList("T-Shirt:Large:Medium:Small", "Trucker Hat:Black:White", "Keychain", "License Plate", "Poster", "Bag:Draw String:Tote"));
         itemsListPath = new File("").getAbsolutePath() + "\\saveSettings\\saved_Items.txt";
         validImageFormats = new ArrayList(Arrays.asList(".jpg", ".gif"));
+        currentItems = new ArrayList();
     }
 
-    public JPanel getItemsImagePanel(JFrame originalFrame) {
-        //System.out.println("getImagePanel, frame width: "+originalFrame.getWidth());
+    public void setInitialItems() {
+        currentItems = getItemsWIcons();
+    }
+
+    public ArrayList<ABItemObject> getCurrentItems() {
+        return currentItems;
+    }
+
+    public int getCurrentItemsSize() {
+        return currentItems.size();
+    }
+
+    //public void setNewCurrentItems(ArrayList<ABItemObject> newItems){
+    //   currentItems = newItems;
+    //}
+    public JPanel getItemsImagePanel(JFrame originalFrame, AB_ProgramFlow abMain, ArrayList<ABItemObject> itemObjectsList) {
+        System.out.println("UI_Items, getItemsImagePanel, frame width: " + originalFrame.getWidth());
+
         JPanel itemsPanel = new JPanel();
         itemsPanel.setLayout(null);
-        ArrayList<ABItemObject> loadedItems = getItemsWIcons();
-        int rowSize = getRowSize(loadedItems.size());
+        System.out.println("   getting panel for: " + itemObjectsList);
+        loadImageIcons(itemObjectsList);
+        //ArrayList<ABItemObject> loadedItems = getItemsWIcons();
+        int rowSize = getRowSize(itemObjectsList.size());
         ImageIcon itemIcon;
         JLabel imageLabel;
         int y = 0;
         int x = 0;
 
-        int gapSize = getImageGapSize(loadedItems);
+        int gapSize = getImageGapSize(itemObjectsList);
+        System.out.println("   gapSize set to: "+gapSize);
         int rows = 0;
-        for (int i = 0; i < loadedItems.size(); i++) {
-            itemIcon = loadedItems.get(i).getImageIcon();
+        for (int i = 0; i < itemObjectsList.size(); i++) {
+            itemIcon = itemObjectsList.get(i).getImageIcon();
             if (i % rowSize == 0 && i != 0) {
-                y += itemIcon.getIconHeight() + itemIcon.getIconHeight() / 4;
+                //y += itemIcon.getIconHeight() + itemIcon.getIconHeight() / 4;
+                y+=gapSize+itemIcon.getIconHeight();
 
                 rows++;
                 x = 0;
             }
 
-            imageLabel = new JLabel(itemIcon);
+            //imageLabel = new JLabel(itemIcon);
+            Item_ClickListener clickListener = new Item_ClickListener(itemObjectsList.get(i), abMain);
+            //tweaked here 5-10
+            imageLabel = clickListener.addListener(itemIcon);
             imageLabel.setBounds(x, y, itemIcon.getIconWidth(), itemIcon.getIconHeight());
-            Item_ClickListener clickListener = new Item_ClickListener(loadedItems.get(i));
-            clickListener.addListener(imageLabel);
 
-            System.out.println("added image for: " + loadedItems.get(i).getItem());
+            System.out.println("    added image for: " + itemObjectsList.get(i));
             itemsPanel.add(imageLabel);
-            x += itemIcon.getIconWidth() + itemIcon.getIconWidth() / 4;
+           // x += itemIcon.getIconWidth() + itemIcon.getIconWidth() / 4;
+           x+= gapSize+itemIcon.getIconWidth();
         }
         rows++;
         JPanel largerPanel = new JPanel();
         largerPanel.setLayout(null);
-        int frameWidth = getImageSetWidth(loadedItems.get(0).getImageIcon(), gapSize, rowSize);
+        int frameWidth = getImageSetWidth(itemObjectsList.get(0).getImageIcon(), gapSize, rowSize);
 
-        int frameHeight = getImageSetHeight(loadedItems.get(0).getImageIcon(), gapSize, rows);
+        int frameHeight = getImageSetHeight(itemObjectsList.get(0).getImageIcon(), gapSize, rows);
         //                   x,  y,  wid, height
         itemsPanel.setBounds(getPanelXorY(frameWidth, originalFrame.getWidth()), getPanelXorY(frameHeight, originalFrame.getHeight()), frameWidth, frameHeight);
         System.out.println("itemsPanel width: " + itemsPanel.getWidth());
@@ -93,13 +106,16 @@ public class UI_Items {
     }
 
     private int getImageGapSize(ArrayList<ABItemObject> items) {
+        System.out.println("UI_Items, getImageGapSize: "+items.size()+" items");
         if (items.size() < 9) {
-            System.out.println("returning gap size: " + items.get(0).getImageIcon().getIconWidth() / 4);
+            System.out.println("   returning gap size, less than 9, /4");
             return items.get(0).getImageIcon().getIconWidth() / 4;
-        } else if (items.size() < 16) {
+        } else if (items.size() < 10) {
+            System.out.println("   returning gap size, less than 10, /5");
             return items.get(0).getImageIcon().getIconWidth() / 5;
         }
-        return items.get(0).getImageIcon().getIconWidth() / 6;
+        System.out.println("   returning gap size, else, /8");
+        return items.get(0).getImageIcon().getIconWidth() / 8;
     }
 
     private int getImageSetWidth(ImageIcon icon, int gap, int rowSize) {
@@ -112,8 +128,10 @@ public class UI_Items {
     }
 
     private int getRowSize(int arraySize) {
-        if (arraySize < 4) {
+        if (arraySize < 6) { //less than 6 is in a straight line on screen
             return arraySize;
+        } else if (arraySize == 10) {
+            return 5;
         } else if (arraySize > 3 && arraySize < 9) {
             return arraySize / 2;
         } else if (arraySize > 8 && arraySize < 20) {
@@ -123,14 +141,16 @@ public class UI_Items {
     }
 
     public ArrayList<ABItemObject> getItemsWIcons() {
+        System.out.println("UI_Items, getItemsWIcons");
         ArrayList<ABItemObject> loadedItems = loadSavedItems();
-        setImageIconPaths(loadedItems);
+        //5-11 bug, setImageIconPaths(loadedItems);
         loadImageIcons(loadedItems);
 
         return loadedItems;
     }
 
     private ArrayList<ABItemObject> loadSavedItems() {
+        System.out.println("UI_Items, loadSavedItems");
         ArrayList<String> itemStringLoad = new ArrayList();
         File loadFile = new File(itemsListPath);
         if (loadFile.exists()) {
@@ -144,13 +164,14 @@ public class UI_Items {
 
             } catch (Exception e) {
                 //create the loadfile
-                System.out.println("Items Failed to Load");
+                System.out.println("   Items Failed to Load");
                 //load default items
             }
         } else {
+            System.out.println("   no save file, returning default items");
             return assignItems(defaultItems);
         }
-        System.out.println("loaded Designs size: " + itemStringLoad.size());
+        System.out.println("   loaded Designs size: " + itemStringLoad.size());
         return assignItems(itemStringLoad);
     }
 
@@ -170,7 +191,7 @@ public class UI_Items {
     private String makeItemSaveString(ABItemObject abItem) {
         StringBuilder sb = new StringBuilder();
         sb.append(abItem.getItem());
-        for (String item : abItem.getSubItems()) {
+        for (ABItemObject item : abItem.getSubItems()) {
             sb.append(":");
             sb.append(item);
         }
@@ -178,15 +199,48 @@ public class UI_Items {
     }
 
     private ArrayList<ABItemObject> assignItems(ArrayList<String> loadedStrings) {
-        //System.out.println("UI_Items, assignItems");
+        //iterate through string list, send subsets of items to createItemObject for creation
+        System.out.println("UI_Items, assignItems");
+
         ArrayList<ABItemObject> itemList = new ArrayList();
-        for (String itemLine : loadedStrings) {
-            itemList.add(createItemObject(itemLine));
-            //System.out.println(itemList.get(itemList.size() - 1).getItem() + " " + itemList.get(itemList.size() - 1).getSubItems());
+        int startIndex = 0;
+        for (int i = 0; i < loadedStrings.size(); i++) {
+            //go through the strings with a saved startIndex until hitting the cue ### then send EndIndex 'i' and send to createItemObject
+            //reset start index to be i+1 and wait for another ### before sending to create again
+            if (loadedStrings.get(i).equals("###")) {
+                itemList.add(createItemObject(loadedStrings, startIndex, i - 1));
+                startIndex = i + 1;
+            }
         }
         return itemList;
+        /*
+        for (String itemLine : loadedStrings) {
+            itemList.add(createItemObject(itemLine));
+            System.out.println("   assigned: " + itemList.get(itemList.size() - 1).getItem() + " " + itemList.get(itemList.size() - 1).getSubItems());
+        }
+        return itemList;
+         */
     }
 
+    private ABItemObject createItemObject(ArrayList<String> loadedStrings, int startIndex, int endIndex) {
+        //StringBuilder buildItem = new StringBuilder();
+        // name, price, icon path
+        System.out.println("UI_Items, createItemObject: " + loadedStrings.get(startIndex) + " " + loadedStrings.get(startIndex + 1) + " " + loadedStrings.get(startIndex + 2));
+        System.out.println("   startIndex: " + startIndex + " end: " + endIndex + " diff: " + (endIndex - startIndex));
+        ABItemObject newItem = new ABItemObject(loadedStrings.get(startIndex), Double.parseDouble(loadedStrings.get(startIndex + 1)), loadedStrings.get(startIndex + 2));
+        if (endIndex - startIndex > 3) {
+            for (int i = startIndex + 3; i < endIndex; i += 3) {
+                System.out.println("   new sub item with: " + loadedStrings.get(i) + " " + loadedStrings.get(i + 1) + " " + loadedStrings.get(i + 2));
+                newItem.addSubItem(loadedStrings.get(i), Double.parseDouble(loadedStrings.get(i + 1)), loadedStrings.get(i + 2));
+            }
+        }
+        System.out.println("   made: " + newItem.getItem() + " sub: " + newItem.getSubItems());
+        System.out.println("   " + newItem.getIconPath());
+        return newItem;
+
+    }
+
+    /*
     private ABItemObject createItemObject(String input) {
         StringBuilder buildItem = new StringBuilder();
         ABItemObject newItem = new ABItemObject();
@@ -198,28 +252,36 @@ public class UI_Items {
             }
 
             if ((!initialFound && input.charAt(i) == ':') || (i == input.length() - 1 && !initialFound)) {
-                newItem.setItem(buildItem.toString());
+                // to do: make price gathering function to replace the 9.99
+                newItem.setItem(buildItem.toString(), 9.99);
                 buildItem.replace(0, buildItem.length(), ""); //reset SB
                 initialFound = true;
             } else if (input.charAt(i) == ':' || i == input.length() - 1) {
-                newItem.addSubItem(buildItem.toString());
+                // to do: make price gathering function
+                // to do: make iconpath gathering function
+                newItem.addSubItem(buildItem.toString(), "iconpath", 9.99);
                 buildItem.replace(0, buildItem.length(), "");
             }
 
         }
         return newItem;
     }
-
+     */
+    //5-11-16, bugging my icons, can still be used on setup screen to auto assign
+    /*
     private void setImageIconPaths(ArrayList<ABItemObject> listItems) {
         //get a list of all the icons with path to image
+        System.out.println("UI_Items, setImageIconPaths");
         HashMap<String, String> iconPaths = getIcons();
         //step through each listItem
         boolean iconAssigned;
         for (ABItemObject item : listItems) {
+            System.out.println("   doing: "+item.getItem());
             iconAssigned = false;
             for (String icon : iconPaths.keySet()) {
                 if (!iconAssigned && item.getItem().toLowerCase().contains(icon.toLowerCase())) {
-                    item.assignIconPath(iconPaths.get(icon));
+                    System.out.println("   setIconPath to: "+iconPaths.get(icon));
+                    item.setIconPath(iconPaths.get(icon));
                     //System.out.println(item.getItem()+" "+iconPaths.get(icon));
                     iconAssigned = true;
                 }
@@ -228,14 +290,17 @@ public class UI_Items {
         //go through list of icons and check if the icon name is contained in the listItem name
         //assign that icon to that item
     }
-
+     */
     public void loadImageIcons(ArrayList<ABItemObject> listItems) {
+        System.out.println("UI_Items, loadImageIcons");
         for (ABItemObject item : listItems) {
+            System.out.println("setting icon for: " + item.getItem());
             item.setIcon(loadIcon(item.getIconPath()));
         }
     }
 
     public ImageIcon loadIcon(String path) {
+        System.out.println("UI_Items, loadIcon: " + path);
         File file = new File(path);
         BufferedImage img;
         ImageIcon icon = null;

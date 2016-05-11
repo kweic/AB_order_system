@@ -28,14 +28,15 @@ public class ImageFileLoader {
         //dataGetter = new ImageDataGetter();
         this.designs = designs;
         progressWindow = new ProgressReporter();
-        progressWindow.run();
-        progressWindow.updateText("test");
+        //progressWindow.run();
+        //progressWindow.updateText("test");
         this.width = width;
 
         //directoryPath = path;
     }
 
     public void makeIcons() {
+        progressWindow.run();
         int i = 0;
         for (AirbrushDesign design : designs) {
             sizeSaveImage(design);
@@ -44,6 +45,8 @@ public class ImageFileLoader {
             progressWindow.updateText("sizing: " + design.getTitle());
             i++;
         }
+        progressWindow.closeWindow();
+        System.out.println("   makeIcons, CLOSE progress");
     }
 
     private BufferedImage sizeImage(BufferedImage bi) {
@@ -104,6 +107,7 @@ public class ImageFileLoader {
         File folder = new File(directory);
         File[] listOfFiles = folder.listFiles();
         AirbrushDesign design;
+        progressWindow.run();
         int i = 0;
         for (File file : listOfFiles) {
             //System.out.println("doing: "+file.getAbsolutePath());
@@ -128,6 +132,7 @@ public class ImageFileLoader {
             }
         }
         progressWindow.closeWindow();
+        System.out.println("    Close Progress Window");
         // System.out.println("files gathered: "+designs.size());
         return designs;
     }

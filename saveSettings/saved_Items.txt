@@ -1,0 +1,78 @@
+Trucker Hat
+9.99
+F:\Programming\Java\AirbrushOrderSystem\saveSettings\ImageAssets\Hat.jpg
+Black Hat
+9.99
+F:\Programming\Java\AirbrushOrderSystem\saveSettings\ImageAssets\Hat.jpg
+Red Hat
+9.99
+F:\Programming\Java\AirbrushOrderSystem\saveSettings\ImageAssets\Hat.jpg
+Blue Hat
+9.99
+F:\Programming\Java\AirbrushOrderSystem\saveSettings\ImageAssets\Hat.jpg
+Pink Hat
+9.99
+F:\Programming\Java\AirbrushOrderSystem\saveSettings\ImageAssets\Hat.jpg
+Green Hat
+9.99
+F:\Programming\Java\AirbrushOrderSystem\saveSettings\ImageAssets\Hat.jpg
+Green Hat2
+9.99
+F:\Programming\Java\AirbrushOrderSystem\saveSettings\ImageAssets\Hat.jpg
+Green Hat2
+9.99
+F:\Programming\Java\AirbrushOrderSystem\saveSettings\ImageAssets\Hat.jpg
+Green Hat2
+9.99
+F:\Programming\Java\AirbrushOrderSystem\saveSettings\ImageAssets\Hat.jpg
+Green Hat2
+9.99
+F:\Programming\Java\AirbrushOrderSystem\saveSettings\ImageAssets\Hat.jpg
+Green Hat2
+9.99
+F:\Programming\Java\AirbrushOrderSystem\saveSettings\ImageAssets\Hat.jpg
+Green Hat2
+9.99
+F:\Programming\Java\AirbrushOrderSystem\saveSettings\ImageAssets\Hat.jpg
+###
+T-Shirt
+9.99
+F:\Programming\Java\AirbrushOrderSystem\saveSettings\ImageAssets\Shirt.jpg
+Large
+9.99
+F:\Programming\Java\AirbrushOrderSystem\saveSettings\ImageAssets\Shirt.jpg
+Medium
+9.99
+F:\Programming\Java\AirbrushOrderSystem\saveSettings\ImageAssets\Shirt.jpg
+Small
+9.99
+F:\Programming\Java\AirbrushOrderSystem\saveSettings\ImageAssets\Shirt.jpg
+###
+Keychain
+4.99
+F:\Programming\Java\AirbrushOrderSystem\saveSettings\ImageAssets\Keychain.jpg
+###
+License Plate
+9.99
+F:\Programming\Java\AirbrushOrderSystem\saveSettings\ImageAssets\Plate.jpg
+Car Plate
+9.99
+F:\Programming\Java\AirbrushOrderSystem\saveSettings\ImageAssets\Plate.jpg
+Bike Plate
+9.99
+F:\Programming\Java\AirbrushOrderSystem\saveSettings\ImageAssets\Plate.jpg
+###
+Poster
+2.99
+F:\Programming\Java\AirbrushOrderSystem\saveSettings\ImageAssets\Poster.jpg
+###
+Bag
+7.99
+F:\Programming\Java\AirbrushOrderSystem\saveSettings\ImageAssets\Bag.jpg
+Draw String
+7.99
+F:\Programming\Java\AirbrushOrderSystem\saveSettings\ImageAssets\Bag.jpg
+Tote
+17.99
+F:\Programming\Java\AirbrushOrderSystem\saveSettings\ImageAssets\Bag.jpg
+###

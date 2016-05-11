@@ -25,6 +25,7 @@ public class ProgressReporter implements Runnable {
 
     @Override
     public void run() {
+        System.out.println("ProgressReporter RUN");
         frame = new JFrame();
         frame.setSize(400, 280);
         frame.setPreferredSize(new Dimension(400, 280));
