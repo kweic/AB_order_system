@@ -1,7 +1,7 @@
 # AB_order_system
 My ordering system for Airbrush Shop
 
-A personal portfolio project to develop a touch screen application for ordering at my employer's Airbrush Apparel shop.
+A personal portfolio project to develop an application for touch screen terminal for ordering at my employer's Airbrush Apparel shop.
 
 Will also keep statistics of orders and activity.
  - views
